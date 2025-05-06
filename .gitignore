@@ -1,5 +1,6 @@
 # ダウンロードされたデータと生成されたファイル
-data/nyc_taxi_sample.csv
+data/*.parquet
+data/nyc_taxi_sample.parquet
 warehouse/
 spark-events/
 
