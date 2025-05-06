@@ -92,3 +92,48 @@ DataSpiderからJDBCコネクタを使用して、Sparkの`thrift://localhost:10
 - [Apache Iceberg 公式ドキュメント](https://iceberg.apache.org/docs/latest/)
 - [Spark SQL ドキュメント](https://spark.apache.org/docs/latest/sql-programming-guide.html)
 - [NYC Taxi & Limousine Commission データセット](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) 
+
+
+
+## 起動構成
+このプロジェクトは単一のDockerコンテナをベースとしたシンプルな構成で動作しています。
+
+### サーバー側コンポーネント
+1. **Apache Sparkサーバー**:
+   - `apache/spark:3.5.0` イメージをベースにしたコンテナ
+   - SparkマスターがUI用に8080ポートで動作
+   - Spark Jobモニタリング用に4040ポートで動作
+   - コンテナ名: `iceberg-demo-spark`
+
+2. **Apache Icebergライブラリ**:
+   - Sparkに統合されたIcebergライブラリ（JARファイル）
+   - 設定ファイルで定義されたIcebergカタログ
+   - データ格納場所: `/opt/spark/warehouse`（コンテナ内）
+
+### クライアント側コンポーネント
+1. **コマンドラインインターフェース**:
+   - Makefileを使用したコマンド実行
+   - `make up`, `make demo`, `make test` などの操作
+
+2. **Webインターフェース**:
+   - SparkマスターUI: `http://localhost:8080`
+   - SparkジョブUI: `http://localhost:4040`（ジョブ実行時のみ）
+
+### 全体的なアーキテクチャ
+```
+[ローカルマシン] <------- HTTP(8080/4040) -------> [Dockerコンテナ]
+     ↓                                                  ↓
+[make コマンド] ----> [docker exec] ---> [Sparkコンテナ内のコマンド]
+     ↓                                                  ↓
+[ローカルファイル] <-- ボリュームマウント --> [コンテナ内ファイル]
+  ./warehouse/                             /opt/spark/warehouse/
+  ./data/                                  /opt/spark/data/
+  ./scripts/                               /opt/spark/scripts/
+```
+
+### 接続方法
+- **Spark SQL**: `docker exec -it iceberg-demo-spark /opt/spark/bin/spark-sql` で直接Spark SQLクライアントに接続
+- **Web UI**: ブラウザから `http://localhost:8080` でSparkマスターUIにアクセス
+- **外部ツール**: Makefile定義のコマンドを使用して操作（`make demo`等）
+
+基本的には単一のコンテナ内で完結する自己完結型のデモ環境であり、複数のサーバーが連携する分散システムではありません。ユーザーが使いやすく、単一環境で素早くIcebergの機能を試せるように設計されています。
