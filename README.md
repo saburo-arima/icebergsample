@@ -10,6 +10,8 @@ This repository provides a quickstart demo for Apache Iceberg that can be comple
 
 - Docker Desktop (Windows/macOS)
 - Make（オプション、なくてもコマンドを個別に実行可能）
+- 約3GBのディスク容量
+- メモリ4GB以上（Dockerに割り当て）
 
 ## クイックスタート / Quick Start
 
@@ -18,30 +20,49 @@ This repository provides a quickstart demo for Apache Iceberg that can be comple
 git clone https://github.com/yourusername/iceberg-quickstart-demo.git
 cd iceberg-quickstart-demo
 
-# 2. 環境を起動（Spark 3.5 + Iceberg 1.8.1 + HadoopCatalog）
-make up
-# または: docker compose up -d
+# 2. 環境を構築して起動（Spark 3.5.0 + Iceberg 1.4.3）
+make rebuild
 
 # 3. デモを実行（NYC Taxiデータのロードと分析）
 make demo
-# または: ./scripts/run_demo.sh
 ```
+
+問題が発生した場合は、`make clean`でクリーンアップしてから再度お試しください。
 
 ## デモ内容 / Demo Contents
 
 このデモでは以下の操作を体験できます：
 
-1. NYC Taxi CSVデータをIcebergテーブルにロード
-2. 日別売上の集計クエリを実行
-3. スキーマ進化機能を使って列を追加
-4. 追加後も過去データが問題なく読み取れることを確認
+1. NYC Taxi Parquetデータをダウンロードしてローカルに保存
+2. Icebergテーブルを作成し、データをロード（INSERT INTO）
+3. 日別売上の集計クエリを実行
+4. スキーマ進化機能を使って`payment_type`列を追加
+5. 追加後も過去データが問題なく読み取れることを確認
 
 The demo includes the following operations:
 
-1. Loading NYC Taxi CSV data into an Iceberg table
-2. Running aggregation queries for daily revenue
-3. Adding columns using schema evolution
-4. Verifying that historical data remains accessible after schema changes
+1. Downloading NYC Taxi Parquet data to local storage
+2. Creating an Iceberg table and loading data (INSERT INTO)
+3. Running aggregation queries for daily revenue
+4. Adding columns using schema evolution
+5. Verifying that historical data remains accessible after schema changes
+
+## コマンド一覧 / Available Commands
+
+| コマンド | 説明 |
+|---------|------|
+| `make up` | Dockerコンテナを起動 |
+| `make down` | Dockerコンテナを停止 |
+| `make rebuild` | 環境を完全にクリーンアップして再構築 |
+| `make demo` | デモを実行（データのダウンロードと分析） |
+| `make clean` | 全てのデータとコンテナをクリーンアップ |
+
+## 技術スタック / Tech Stack
+
+- Apache Spark 3.5.0
+- Apache Iceberg 1.4.3
+- Docker & Docker Compose
+- NYC Taxi Dataset (2019-01, Parquet形式)
 
 ## 他システムとの連携 / Integration with Other Systems
 
@@ -51,17 +72,23 @@ HULFT10を使ってファイルを`warehouse/`ディレクトリに転送する�
 
 ```
 送信元: 業務サーバー
-送信先: ${DEMO_DIR}/warehouse/nyc_taxi/
-ファイル形式: CSV
+送信先: ${DEMO_DIR}/warehouse/db.db/nyc_taxi/
+ファイル形式: Parquet
 転送後処理: なし（Icebergが自動的に新規ファイルを検出）
 ```
 
-## リソース要件 / Resource Requirements
+### DataSpiderとの連携
 
-- メモリ: 4GB以下
-- ディスク: 3GB以下
+DataSpiderからJDBCコネクタを使用して、Sparkの`thrift://localhost:10000`エンドポイントに接続することで、Icebergテーブルに対してSQLクエリを実行できます。
+
+## トラブルシューティング / Troubleshooting
+
+- **Docker関連のエラー**: Docker Desktopが起動していることを確認してください
+- **メモリ不足エラー**: Docker Desktopの設定でメモリ割り当てを増やしてください（4GB以上推奨）
+- **SQLエラー**: スキーマの互換性を確認してください。Parquetファイルのスキーマと作成するテーブルのスキーマが一致している必要があります
 
 ## 参考リンク / References
 
 - [Apache Iceberg 公式ドキュメント](https://iceberg.apache.org/docs/latest/)
-- [Spark SQL ドキュメント](https://spark.apache.org/docs/latest/sql-programming-guide.html) 
+- [Spark SQL ドキュメント](https://spark.apache.org/docs/latest/sql-programming-guide.html)
+- [NYC Taxi & Limousine Commission データセット](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) 

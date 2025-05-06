@@ -14,9 +14,14 @@ CREATE TABLE local.db.nyc_taxi (
 PARTITIONED BY (days(pickup_datetime));
 
 -- 2. データのロード (Parquet)
-COPY INTO local.db.nyc_taxi
-FROM '/opt/spark/data/nyc_taxi_sample.parquet'
-FILEFORMAT = PARQUET;
+-- 一時テーブルを作成してParquetファイルを読み込む
+CREATE TEMPORARY VIEW nyc_taxi_temp
+USING parquet
+OPTIONS (path="/opt/spark/data/nyc_taxi_sample.parquet");
+
+-- 一時テーブルからデータをIcebergテーブルに挿入
+INSERT INTO local.db.nyc_taxi
+SELECT * FROM nyc_taxi_temp;
 
 -- 3. テーブル情報の表示
 DESCRIBE TABLE EXTENDED local.db.nyc_taxi;
