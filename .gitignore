@@ -1,0 +1,21 @@
+# ダウンロードされたデータと生成されたファイル
+data/nyc_taxi_sample.csv
+warehouse/
+spark-events/
+
+# OS固有のファイル
+.DS_Store
+Thumbs.db
+
+# エディタ設定
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ログファイル
+*.log
+logs/
+
+# 環境変数
+.env 

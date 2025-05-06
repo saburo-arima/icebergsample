@@ -1,0 +1,16 @@
+services:
+  spark:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: iceberg-demo-spark
+    ports:
+      - "8080:8080"   # Spark UI
+      - "4040:4040"   # Spark Job UI
+    volumes:
+      - ./warehouse:/opt/spark/warehouse
+      - ./data:/opt/spark/data
+      - ./scripts:/opt/spark/scripts
+    command: /bin/bash -c "sleep infinity"
+    stdin_open: true
+    tty: true 
