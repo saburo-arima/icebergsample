@@ -11,6 +11,6 @@ services:
       - ./warehouse:/opt/spark/warehouse
       - ./data:/opt/spark/data
       - ./scripts:/opt/spark/scripts
-    command: /bin/bash -c "sleep infinity"
+    command: bash -c "/opt/spark/sbin/start-master.sh && sleep infinity"
     stdin_open: true
     tty: true 
