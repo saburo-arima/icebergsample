@@ -8,7 +8,7 @@ This repository provides a quickstart demo for Apache Iceberg that can be comple
 
 ## 前提条件 / Prerequisites
 
-- Docker Desktop (Windows/macOS)
+- Docker Desktop (Windows/macOS) (企業利用の場合は有償プランを必ずご利用ください）
 - Make（オプション、なくてもコマンドを個別に実行可能）
 - 約3GBのディスク容量
 - メモリ4GB以上（Dockerに割り当て）
