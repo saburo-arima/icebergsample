@@ -79,7 +79,7 @@ HULFT10を使ってファイルを`warehouse/`ディレクトリに転送する�
 
 ### DataSpiderとの連携
 
-DataSpiderからJDBCコネクタを使用して、Sparkの`thrift://localhost:10000`エンドポイントに接続することで、Icebergテーブルに対してSQLクエリを実行できます。
+DataSpiderからJDBCコネクタを使用して、Sparkの`thrift://localhost:10000`エンドポイントに接続することで、Icebergテーブルに対してSQLクエリを実行できます。(現時点ではサービスを上げていないので利用不可）
 
 ## トラブルシューティング / Troubleshooting
 
