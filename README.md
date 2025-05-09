@@ -17,7 +17,7 @@ This repository provides a quickstart demo for Apache Iceberg that can be comple
 
 ```bash
 # 1. リポジトリをクローン
-git clone https://github.com/yourusername/iceberg-quickstart-demo.git
+git clone https://github.com/saburo-arima/iceberg-quickstart-demo.git
 cd iceberg-quickstart-demo
 
 # 2. 環境を構築して起動（Spark 3.5.0 + Iceberg 1.4.3）
